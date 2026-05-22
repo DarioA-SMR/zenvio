@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Zenvio — Premium task manager</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="shortcut icon" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- animated mesh background (shared between login and app) -->
+<div class="mesh" aria-hidden="true">
+  <div class="blob v b1"></div>
+  <div class="blob c b2"></div>
+  <div class="blob p b3"></div>
+  <div class="blob l b4"></div>
+</div>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="login-screen" class="login-screen show" aria-label="Sign in">
+  <div class="login-card">
+    <div class="login-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 6h16M4 12h10M4 18h6"/>
+        <circle cx="18" cy="17" r="3" fill="currentColor" stroke="none"/>
+      </svg>
+    </div>
+    <h1 class="login-title">Zenvio</h1>
+    <p class="login-sub">Your premium task manager</p>
+    <div class="auth-field">
+      <input id="login-email" type="email" placeholder="Email" autocomplete="email" />
+    </div>
+    <div class="auth-field">
+      <input id="login-password" type="password" placeholder="Password" autocomplete="current-password" />
+    </div>
+    <p id="login-error" class="signin-error" role="alert"></p>
+    <button id="login-submit" class="auth-btn primary" type="button">Sign in</button>
+    <div class="auth-divider"><span>or</span></div>
+    <button id="google-signin" class="google-btn" type="button">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      Continue with Google
+    </button>
+    <p class="auth-switch">Don't have an account? <a href="#" id="go-register">Create one</a></p>
+  </div>
+</div>
+
+<!-- ===== REGISTER SCREEN ===== -->
+<div id="register-screen" class="login-screen" aria-label="Create account">
+  <div class="login-card">
+    <div class="login-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 6h16M4 12h10M4 18h6"/>
+        <circle cx="18" cy="17" r="3" fill="currentColor" stroke="none"/>
+      </svg>
+    </div>
+    <h1 class="login-title">Zenvio</h1>
+    <p class="login-sub">Create your account</p>
+    <div class="auth-field">
+      <input id="reg-username" type="text" placeholder="Username" autocomplete="username" />
+    </div>
+    <div class="auth-field">
+      <input id="reg-email" type="email" placeholder="Email" autocomplete="email" />
+    </div>
+    <div class="auth-field">
+      <input id="reg-password" type="password" placeholder="Password (min 6 characters)" autocomplete="new-password" />
+    </div>
+    <p id="register-error" class="signin-error" role="alert"></p>
+    <button id="register-submit" class="auth-btn primary" type="button">Create account</button>
+    <p class="auth-switch">Already have an account? <a href="#" id="go-login">Sign in</a></p>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<main class="app" id="app">
+
+  <header class="header">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 6h16M4 12h10M4 18h6"/>
+          <circle cx="18" cy="17" r="3" fill="currentColor" stroke="none"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="name">Zenvio</span>
+        <span class="date" id="date"></span>
+      </div>
+    </div>
+    <div class="avatar" id="avatar" title="Click to sign out" role="button" tabindex="0"></div>
+  </header>
+
+  <h1 class="greeting" id="greeting"></h1>
+
+  <section class="stats" aria-label="Today's stats">
+    <div class="stat cyan">
+      <div class="label">Today</div>
+      <div class="value"><span id="stat-today">0</span><span class="suffix">tasks</span></div>
+      <div class="bar"><i id="bar-today"></i></div>
+    </div>
+    <div class="stat lime">
+      <div class="label">Completed</div>
+      <div class="value">
+        <span id="stat-completed">0</span>
+        <span class="suffix" id="stat-completed-suffix">/ 0</span>
+      </div>
+      <div class="bar"><i id="bar-completed"></i></div>
+    </div>
+    <div class="stat violet">
+      <div class="label">Done total</div>
+      <div class="value"><span id="stat-streak">0</span><span class="suffix">tasks</span></div>
+      <div class="bar"><i id="bar-streak"></i></div>
+    </div>
+  </section>
+
+  <div class="chips-wrap">
+    <div class="chips" id="chips">
+      <div class="chip active" data-cat="all"><span class="dot"></span>All <span class="count">0</span></div>
+      <div class="chip" data-cat="work"><span class="dot"></span>Work <span class="count">0</span></div>
+      <div class="chip" data-cat="personal"><span class="dot"></span>Personal <span class="count">0</span></div>
+      <div class="chip" data-cat="health"><span class="dot"></span>Health <span class="count">0</span></div>
+      <div class="chip" data-cat="learning"><span class="dot"></span>Learning <span class="count">0</span></div>
+      <div class="chip" data-cat="side"><span class="dot"></span>Side&nbsp;Project <span class="count">0</span></div>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <h2 id="section-title">Today's flow</h2>
+    <span class="sub" id="section-sub"></span>
+  </div>
+
+  <section class="tasks" id="tasks" aria-live="polite"></section>
+
+  <section class="empty" id="empty" aria-hidden="true">
+    <svg class="illu" viewBox="0 0 220 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stop-color="#7c3aed"/>
+          <stop offset="100%" stop-color="#06b6d4"/>
+        </linearGradient>
+        <linearGradient id="g2" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.1"/>
+        </linearGradient>
+        <radialGradient id="g3" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stop-color="#a3e635" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#a3e635" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="110" cy="110" rx="90" ry="60" fill="url(#g3)" opacity="0.6"/>
+      <g transform="translate(60 30)">
+        <rect x="0" y="10" width="100" height="130" rx="14" fill="url(#g2)" stroke="url(#g1)" stroke-width="1.6"/>
+        <rect x="30" y="0" width="40" height="20" rx="6" fill="#1a1830" stroke="url(#g1)" stroke-width="1.5"/>
+        <circle cx="50" cy="10" r="3.5" fill="#a78bfa"/>
+        <g stroke="#a78bfa" stroke-opacity="0.45" stroke-linecap="round" stroke-width="2">
+          <line x1="16" y1="44" x2="84" y2="44"/>
+          <line x1="16" y1="62" x2="64" y2="62"/>
+          <line x1="16" y1="80" x2="76" y2="80"/>
+          <line x1="16" y1="98" x2="56" y2="98"/>
+        </g>
+        <g transform="translate(50 116)">
+          <circle r="14" fill="#0a0a14" stroke="url(#g1)" stroke-width="1.6"/>
+          <path d="M-5 0 l3.5 4 l7 -7" stroke="#06b6d4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </g>
+      </g>
+      <g fill="#06b6d4">
+        <circle cx="32"  cy="50"  r="2.5" opacity="0.8"/>
+        <circle cx="190" cy="60"  r="2"   opacity="0.7"/>
+        <circle cx="28"  cy="150" r="1.8" opacity="0.7"/>
+        <circle cx="196" cy="160" r="2.2" opacity="0.6"/>
+      </g>
+      <g fill="#a3e635">
+        <circle cx="48"  cy="180" r="1.5" opacity="0.7"/>
+        <circle cx="178" cy="40"  r="1.5" opacity="0.7"/>
+      </g>
+      <g stroke="#a78bfa" stroke-width="1.6" stroke-linecap="round" opacity="0.6">
+        <line x1="20" y1="100" x2="26" y2="100"/>
+        <line x1="23" y1="97"  x2="23" y2="103"/>
+        <line x1="200" y1="110" x2="206" y2="110"/>
+        <line x1="203" y1="107" x2="203" y2="113"/>
+      </g>
+    </svg>
+    <h3>All clear — your mind too.</h3>
+    <p>No tasks in this lane right now. Tap the glowing button to start a new flow.</p>
+    <button id="empty-add">+ Add your first task</button>
+  </section>
+
+</main>
+
+<!-- ===== FAB ===== -->
+<button class="fab" id="fab" aria-label="Add task">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+    <path d="M12 5v14M5 12h14"/>
+  </svg>
+</button>
+
+<!-- ===== MODAL ===== -->
+<div class="backdrop" id="backdrop"></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="grabber"></div>
+  <h2 id="modal-title">New task</h2>
+
+  <div class="field">
+    <label for="m-title">Title</label>
+    <input id="m-title" type="text" placeholder="What do you want to get done?" autocomplete="off" />
+  </div>
+
+  <div class="field">
+    <label for="m-desc">Description</label>
+    <textarea id="m-desc" rows="2" placeholder="Add details, links, or context…"></textarea>
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <label for="m-date">Date</label>
+      <input id="m-date" type="date" />
+    </div>
+    <div class="field">
+      <label for="m-time">Time</label>
+      <input id="m-time" type="time" />
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Priority</label>
+    <div class="orbs" id="orbs">
+      <div class="orb" data-p="low"><span class="glow"></span>Low</div>
+      <div class="orb active" data-p="medium"><span class="glow"></span>Medium</div>
+      <div class="orb" data-p="high"><span class="glow"></span>High</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Category</label>
+    <div class="catpick" id="catpick">
+      <div class="chip active" data-cat="work"><span class="dot"></span>Work</div>
+      <div class="chip" data-cat="personal"><span class="dot"></span>Personal</div>
+      <div class="chip" data-cat="health"><span class="dot"></span>Health</div>
+      <div class="chip" data-cat="learning"><span class="dot"></span>Learning</div>
+      <div class="chip" data-cat="side"><span class="dot"></span>Side&nbsp;Project</div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn" id="cancel">Cancel</button>
+    <button class="btn primary" id="save">Create task</button>
+  </div>
+</div>
+
+<!-- ===== FIREBASE SDK (compat mode via CDN) ===== -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script src="config.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/tasks.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

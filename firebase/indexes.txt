@@ -1,0 +1,36 @@
+Create these composite indexes in Firebase Console → Firestore Database → Indexes → Composite
+
+────────────────────────────────────────────────────────────────────
+Index 1 — tasks ordered by due date (main list query)
+  Collection: tasks
+  Fields:
+    userId    — Ascending
+    dueDate   — Ascending
+  Query scope: Collection
+
+────────────────────────────────────────────────────────────────────
+Index 2 — tasks filtered by completion and due date
+  Collection: tasks
+  Fields:
+    userId    — Ascending
+    completed — Ascending
+    dueDate   — Ascending
+  Query scope: Collection
+
+────────────────────────────────────────────────────────────────────
+Index 3 — tasks filtered by category, sorted by creation date
+  Collection: tasks
+  Fields:
+    userId    — Ascending
+    category  — Ascending
+    createdAt — Descending
+  Query scope: Collection
+
+────────────────────────────────────────────────────────────────────
+Index 4 — tasks filtered by priority and due date
+  Collection: tasks
+  Fields:
+    userId   — Ascending
+    priority — Ascending
+    dueDate  — Ascending
+  Query scope: Collection
