@@ -1,9 +1,11 @@
-// Zenvio — initializes the Firebase app, auth, and Firestore instances.
-// window.firebaseConfig must be populated in config.js before this file loads.
+import { initializeApp }                      from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, setPersistence,
+         browserLocalPersistence }             from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore }                        from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { firebaseConfig }                      from "../firebase-config.js";
 
-const firebaseApp = firebase.initializeApp(window.firebaseConfig);
-const auth = firebase.auth();
-const db   = firebase.firestore();
+export const app  = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db   = getFirestore(app);
 
-// Persist session across browser restarts.
-auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(console.error);
+setPersistence(auth, browserLocalPersistence).catch(console.error);

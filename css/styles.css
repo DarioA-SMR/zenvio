@@ -1,4 +1,4 @@
-/* ----------  TOKENS ---------- */
+/*   TOKENS  */
 :root {
   --bg: #0a0a14;
   --surface: rgba(255, 255, 255, 0.05);
@@ -23,8 +23,9 @@
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-* { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
+html { overflow-x: hidden; }
 
 body {
   font-family: "DM Sans", system-ui, -apple-system, sans-serif;
@@ -38,13 +39,16 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* ----------  ANIMATED MESH BACKGROUND ---------- */
+/*   ANIMATED MESH BACKGROUND  */
 .mesh {
   position: fixed;
   inset: -10vmax;
   z-index: -1;
   overflow: hidden;
   background: var(--bg);
+  pointer-events: none;
+  contain: layout style paint;
+  animation-fill-mode: both;
 }
 .blob {
   position: absolute;
@@ -52,6 +56,7 @@ body {
   filter: blur(80px);
   opacity: 0.55;
   will-change: transform;
+  backface-visibility: hidden;
 }
 .blob.v { background: radial-gradient(circle at 30% 30%, #7c3aed 0%, transparent 60%); }
 .blob.c { background: radial-gradient(circle at 70% 60%, #06b6d4 0%, transparent 60%); }
@@ -93,7 +98,7 @@ body {
   pointer-events: none;
 }
 
-/* ----------  APP SHELL ---------- */
+/*   APP SHELL  */
 .app {
   width: 100%;
   max-width: 480px;
@@ -108,7 +113,7 @@ body {
   position: relative;
 }
 
-/* ----------  HEADER ---------- */
+/*   HEADER  */
 .header {
   display: flex;
   align-items: center;
@@ -152,6 +157,9 @@ body {
   font-weight: 500;
   margin-top: 2px;
 }
+/* Avatar + user-menu dropdown */
+.avatar-wrap { position: relative; }
+
 .avatar {
   width: 40px;
   height: 40px;
@@ -170,7 +178,59 @@ body {
 }
 .avatar:hover { transform: scale(1.05); }
 
-/* ----------  GREETING / STATS ---------- */
+.user-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: rgba(20, 18, 36, 0.95);
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  padding: 12px;
+  min-width: 160px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translateY(-8px) scale(0.96);
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+  z-index: 60;
+  will-change: transform, opacity;
+}
+.user-menu.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.user-menu .user-name {
+  display: block;
+  font-size: 12px;
+  color: var(--text-dim);
+  font-weight: 600;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.signout-btn {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #fca5a5;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 4px;
+  cursor: pointer;
+  text-align: left;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.signout-btn:hover { background: rgba(239, 68, 68, 0.12); }
+
+/*   GREETING / STATS  */
 .greeting {
   font-family: "Syne", sans-serif;
   font-size: 30px;
@@ -249,7 +309,7 @@ body {
 .stat.lime .bar > i { background: linear-gradient(90deg, var(--lime), var(--cyan)); }
 .stat.cyan .bar > i { background: linear-gradient(90deg, var(--cyan), var(--violet-soft)); }
 
-/* ----------  CATEGORY CHIPS ---------- */
+/*   CATEGORY CHIPS  */
 .chips-wrap {
   margin: 0 -20px 22px;
   padding: 0 20px;
@@ -279,7 +339,7 @@ body {
   color: var(--text);
   cursor: pointer;
   white-space: nowrap;
-  transition: transform 0.35s var(--ease-spring), background 0.25s, border-color 0.25s, box-shadow 0.3s;
+  transition: transform 0.2s var(--ease-spring), background 0.2s, border-color 0.2s, box-shadow 0.2s, color 0.2s;
   user-select: none;
 }
 .chip .dot {
@@ -313,7 +373,7 @@ body {
 .chip[data-cat="learning"] .dot  { color: #f59e0b; background: #f59e0b; }
 .chip[data-cat="side"] .dot      { color: #ec4899; background: #ec4899; }
 
-/* ----------  SECTION HEADER ---------- */
+/*   SECTION HEADER  */
 .section-head {
   display: flex;
   align-items: baseline;
@@ -329,7 +389,7 @@ body {
 }
 .section-head .sub { font-size: 12px; color: var(--text-dim); }
 
-/* ----------  TASK CARDS ---------- */
+/*   TASK CARDS  */
 .tasks { display: flex; flex-direction: column; gap: 10px; }
 
 .task {
@@ -347,16 +407,18 @@ body {
   -webkit-backdrop-filter: blur(20px);
   box-shadow: var(--shadow-card);
   transition:
-    transform 0.4s var(--ease-out),
-    box-shadow 0.4s var(--ease-out),
-    border-color 0.3s,
-    opacity 0.5s var(--ease-out);
+    transform 0.15s var(--ease-out),
+    box-shadow 0.15s var(--ease-out),
+    border-color 0.15s,
+    opacity 0.2s var(--ease-out),
+    background-color 0.2s;
   cursor: pointer;
   opacity: 0;
   transform: translateY(14px);
   animation: taskIn 0.6s var(--ease-out) forwards;
   animation-delay: var(--d, 0ms);
   will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 @keyframes taskIn {
   to { opacity: 1; transform: translateY(0); }
@@ -385,9 +447,24 @@ body {
   0%, 100% { box-shadow: var(--shadow-card), 0 0 0 0 rgba(239, 68, 68, 0); }
   50%      { box-shadow: var(--shadow-card), 0 0 0 6px rgba(239, 68, 68, 0.12), 0 0 30px rgba(239, 68, 68, 0.25); }
 }
+/* Fix: pause pulse + force visible — previously the animation override caused invisibility */
 .task.high:hover {
-  animation: pulseRed 2.6s ease-in-out infinite;
+  animation-play-state: paused;
+  transform: translateY(-3px);
   box-shadow: var(--shadow-lift), 0 0 28px rgba(239, 68, 68, 0.3);
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Saving state (optimistic UI) */
+.task.saving {
+  opacity: 0.55;
+  pointer-events: none;
+  animation: savingPulse 1.2s ease-in-out infinite;
+}
+@keyframes savingPulse {
+  0%, 100% { opacity: 0.45; }
+  50%       { opacity: 0.65; }
 }
 
 /* Circular checkbox */
@@ -402,7 +479,7 @@ body {
   place-items: center;
   cursor: pointer;
   flex-shrink: 0;
-  transition: transform 0.3s var(--ease-spring), background 0.3s, border-color 0.3s;
+  transition: transform 0.2s var(--ease-spring), background 0.2s, border-color 0.2s, box-shadow 0.2s;
   position: relative;
   box-shadow: 0 0 0 0 var(--pcolor);
 }
@@ -537,6 +614,7 @@ body {
   animation: pop 0.85s var(--ease-out) forwards;
   --tx: 0px; --ty: 0px; --r: 0deg;
   transform: translate(0, 0) scale(1);
+  will-change: transform, opacity;
 }
 @keyframes pop {
   0%   { transform: translate(0, 0) scale(0.4) rotate(0); opacity: 1; }
@@ -544,7 +622,7 @@ body {
   100% { transform: translate(var(--tx), var(--ty)) scale(0.2) rotate(var(--r)); opacity: 0; }
 }
 
-/* ----------  FAB ---------- */
+/*   FAB  */
 .fab {
   position: fixed;
   right: max(24px, calc(50vw - 220px));
@@ -563,7 +641,9 @@ body {
     0 10px 30px rgba(124, 58, 237, 0.55),
     0 0 0 1px rgba(255, 255, 255, 0.08) inset,
     0 0 28px rgba(6, 182, 212, 0.35);
-  transition: transform 0.5s var(--ease-spring), box-shadow 0.4s;
+  transition: transform 0.2s var(--ease-spring), box-shadow 0.2s;
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
 }
 .fab::after {
   content: "";
@@ -575,6 +655,7 @@ body {
   filter: blur(8px);
   opacity: 0.6;
   animation: spin 6s linear infinite;
+  pointer-events: none;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 .fab:hover { transform: translateY(-3px) scale(1.04); }
@@ -584,9 +665,30 @@ body {
   50%  { transform: rotate(180deg) scale(1.15); }
   100% { transform: rotate(360deg) scale(1); }
 }
-.fab svg { width: 26px; height: 26px; position: relative; z-index: 1; }
+.fab svg {
+  width: 26px;
+  height: 26px;
+  position: relative;
+  z-index: 1;
+  transition: opacity 0.15s;
+}
 
-/* ----------  EMPTY STATE ---------- */
+/* FAB loading spinner (CSS-only, shown while create is in-flight) */
+.fab.loading svg { opacity: 0; }
+.fab.loading::before {
+  content: "";
+  display: block;
+  width: 22px;
+  height: 22px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  position: absolute;
+  z-index: 1;
+}
+
+/*   EMPTY STATE  */
 .empty {
   display: none;
   flex-direction: column;
@@ -620,7 +722,62 @@ body {
 }
 .empty button:hover { transform: translateY(-2px); }
 
-/* ----------  MODAL ---------- */
+/* Skeleton loader */
+.skeleton-list { display: flex; flex-direction: column; gap: 10px; }
+.skeleton-list.hidden { display: none; }
+.skel-card {
+  height: 72px;
+  border-radius: var(--radius);
+  background: linear-gradient(
+    90deg,
+    var(--surface) 25%,
+    rgba(255, 255, 255, 0.09) 50%,
+    var(--surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border: 1px solid var(--border);
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Toast notifications */
+#toast-container {
+  position: fixed;
+  bottom: max(104px, calc(76px + env(safe-area-inset-bottom)));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  align-items: center;
+  pointer-events: none;
+}
+.toast {
+  background: rgba(22, 20, 40, 0.94);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  transform: translateY(16px);
+  opacity: 0;
+  transition: transform 0.3s var(--ease-out), opacity 0.3s var(--ease-out);
+  will-change: transform, opacity;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.error { border-color: rgba(239, 68, 68, 0.4); color: #fca5a5; }
+
+/*   MODAL  */
 .backdrop {
   position: fixed;
   inset: 0;
@@ -654,6 +811,7 @@ body {
   padding: 14px 24px max(28px, calc(16px + env(safe-area-inset-bottom)));
   z-index: 50;
   transition: transform 0.5s var(--ease-out);
+  will-change: transform;
   box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.6);
   max-height: 90vh;
   max-height: 90dvh;
@@ -760,7 +918,7 @@ body {
   background: var(--surface);
   color: var(--text);
   cursor: pointer;
-  transition: transform 0.25s var(--ease-spring), background 0.25s, box-shadow 0.3s;
+  transition: transform 0.15s var(--ease-spring), background 0.2s, box-shadow 0.2s, border-color 0.15s, opacity 0.2s;
 }
 .btn:hover { transform: translateY(-2px); }
 .btn.primary {
@@ -770,7 +928,47 @@ body {
   box-shadow: 0 10px 28px rgba(124, 58, 237, 0.5);
 }
 
-/* ----------  LOGIN SCREEN ---------- */
+/* Delete button + inline confirm */
+.delete-row { margin-top: 10px; }
+.btn.danger {
+  flex: 1;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.08);
+  color: #fca5a5;
+}
+.btn.danger:hover { background: rgba(239, 68, 68, 0.16); border-color: rgba(239, 68, 68, 0.5); }
+
+.confirm-delete {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 2px;
+  font-size: 13px;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+.confirm-delete.hidden { display: none; }
+.confirm-delete button {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+#confirm-yes {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+#confirm-yes:hover { background: rgba(239, 68, 68, 0.24); }
+#confirm-no:hover  { background: var(--surface-2); }
+
+/*   LOGIN SCREEN  */
 .login-screen {
   position: fixed;
   inset: 0;
@@ -870,25 +1068,45 @@ body {
   line-height: 1.4;
 }
 
-/* ----------  INITIAL AUTH STATE — toggled by app.js ---------- */
+/*   INITIAL AUTH STATE — toggled by app.js  */
 #app  { display: none; }
 #fab  { display: none; }
 
-/* ----------  RESPONSIVE ---------- */
-@media (max-width: 520px) {
+/*   RESPONSIVE  */
+
+/* ── Mobile: max-width 480px ── */
+@media (max-width: 480px) {
+  /* Prevent iOS auto-zoom on input focus (requires font-size >= 16px) */
+  .auth-field input,
+  .field input,
+  .field textarea { font-size: 16px; }
+
+  /* Minimum 44px tap target height for all interactive auth controls */
+  .auth-field input { padding: 13px 16px; min-height: 48px; }
+  .auth-btn { min-height: 48px; }
+  .google-btn { min-height: 48px; }
+
+  /* App shell */
   .greeting { font-size: 26px; }
   .stat .value { font-size: 22px; }
   .stat .label { font-size: 10px; }
   .brand-text .name { font-size: 20px; }
+
+  /* Task cards: full-width comfortable padding */
+  .task { padding: 14px 14px 14px 12px; }
+
+  /* Chips bar: no overflow bleed on very tight screens */
+  .chips-wrap { margin: 0 -16px 20px; padding: 0 16px; }
 }
 
+/* ── Very small mobile: max-width 380px ── */
 @media (max-width: 380px) {
   .login-card { padding: 28px 20px 24px; border-radius: 22px; }
   .login-title { font-size: 28px; }
   .login-mark { width: 50px; height: 50px; margin-bottom: 14px; }
   .greeting { font-size: 22px; }
   .stats { gap: 6px; }
-  .stat { padding: 10px 10px; }
+  .stat { padding: 10px; }
   .stat .value { font-size: 20px; gap: 4px; }
   .stat .value .suffix { font-size: 10px; }
   .header { margin-bottom: 18px; }
@@ -896,6 +1114,7 @@ body {
   .avatar { width: 36px; height: 36px; }
 }
 
+/* ── Compact height (e.g. small phone landscape on login) ── */
 @media (max-height: 680px) and (max-width: 520px) {
   .login-card { padding: 22px 20px 20px; }
   .login-mark { width: 44px; height: 44px; margin-bottom: 10px; }
@@ -905,20 +1124,56 @@ body {
   .auth-divider { margin: 10px 0; }
 }
 
+/* ── Landscape orientation on small phone ── */
 @media (orientation: landscape) and (max-height: 500px) {
   .login-screen { align-items: flex-start; padding-top: 12px; }
-  .login-card { padding: 16px 24px 16px; }
+  .login-card { padding: 16px 24px; }
   .login-mark { width: 40px; height: 40px; margin-bottom: 8px; }
   .login-title { font-size: 24px; }
   .login-sub { margin-bottom: 14px; font-size: 12px; }
   .auth-field { margin-bottom: 7px; }
-  .auth-field input { padding: 10px 14px; }
+  .auth-field input { padding: 10px 14px; min-height: 44px; }
   .auth-divider { margin: 8px 0; }
-  .google-btn { padding: 10px 16px; }
-  .auth-btn { padding: 11px 16px; }
+  .google-btn { padding: 10px 16px; min-height: 44px; }
+  .auth-btn { padding: 11px 16px; min-height: 44px; }
 }
 
-/* ----------  AUTH FORMS ---------- */
+/* ── Tablet: 481px – 768px ── */
+@media (min-width: 481px) and (max-width: 768px) {
+  .app { max-width: 600px; }
+  .modal { max-width: 480px; }
+  .login-card { max-width: 400px; }
+}
+
+/* ── Desktop: 769px+ ── */
+@media (min-width: 769px) {
+  /* Modal becomes a centered floating dialog instead of a bottom sheet */
+  .modal {
+    top: 50%;
+    bottom: auto;
+    transform: translate(-50%, calc(-50% + 20px));
+    max-width: 440px;
+    border-radius: 28px;
+    border-bottom: 1px solid var(--border-strong);
+    opacity: 0;
+    transition: transform 0.4s var(--ease-out), opacity 0.4s var(--ease-out);
+  }
+  .modal.show {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+  /* Hide the mobile grab handle */
+  .grabber { display: none; }
+
+  /* Subtle card hover on desktop */
+  .task:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+  }
+  .chip:hover { transform: translateY(-2px); }
+}
+
+/*   AUTH FORMS  */
 .auth-field { margin-bottom: 12px; }
 .auth-field input {
   width: 100%;
